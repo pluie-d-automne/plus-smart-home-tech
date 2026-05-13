@@ -105,7 +105,7 @@ public class CollectorController {
                 .setPayload(payload)
                 .build();
 
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(CollectorTopics.TELEMETRY_SENSORS_TOPIC, eventAvro);
+        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(CollectorTopics.TELEMETRY_SENSORS_TOPIC, event.getHubId(), eventAvro);
         client.getProducer().send(record);
     }
 
@@ -155,7 +155,7 @@ public class CollectorController {
                 .setTimestamp(event.getTimestamp())
                 .setPayload(payload)
                 .build();
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(CollectorTopics.TELEMETRY_HUBS_TOPIC, eventAvro);
+        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(CollectorTopics.TELEMETRY_HUBS_TOPIC, event.getHubId(), eventAvro);
         client.getProducer().send(record);
     }
 

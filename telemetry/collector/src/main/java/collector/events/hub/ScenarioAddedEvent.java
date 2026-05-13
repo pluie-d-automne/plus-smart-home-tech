@@ -16,10 +16,10 @@ public class ScenarioAddedEvent extends HubEvent {
     private String name;
 
     @NotEmpty
-    List<ScenarioCondition> conditions;
+    private List<ScenarioCondition> conditions;
 
     @NotEmpty
-    List<DeviceAction> actions;
+    private List<DeviceAction> actions;
 
     @Override
     public HubEventType getType() {
