@@ -14,7 +14,7 @@ public class SwitchSensorEventHandler extends BaseSensorEventHandler<SwitchSenso
     private SwitchSensorEventHandler(KafkaEventProducer producer) {
         super(producer);
     }
-    Object payload;
+    private Object payload;
 
     @Override
     public SensorEventProto.PayloadCase getMessageType() {

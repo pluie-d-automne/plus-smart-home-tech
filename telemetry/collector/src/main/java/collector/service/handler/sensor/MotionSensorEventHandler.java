@@ -14,7 +14,7 @@ public class MotionSensorEventHandler extends BaseSensorEventHandler<MotionSenso
     private MotionSensorEventHandler(KafkaEventProducer producer) {
         super(producer);
     }
-    Object payload;
+    private Object payload;
 
     @Override
     public SensorEventProto.PayloadCase getMessageType() {

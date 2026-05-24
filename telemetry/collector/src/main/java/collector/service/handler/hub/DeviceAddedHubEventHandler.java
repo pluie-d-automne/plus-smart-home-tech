@@ -7,12 +7,17 @@ import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 import collector.utils.EnumMapper;
 import org.apache.avro.specific.SpecificRecordBase;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+
+import java.time.Instant;
 
 @Component(value = "DEVICE_ADDED")
 public class DeviceAddedHubEventHandler extends BaseHubEventHandler<DeviceAddedEventAvro> {
     public DeviceAddedHubEventHandler(KafkaEventProducer producer) {
         super(producer);
     }
+    private Object payload;
 
     @Override
     public HubEventProto.PayloadCase getMessageType() {
@@ -22,9 +27,15 @@ public class DeviceAddedHubEventHandler extends BaseHubEventHandler<DeviceAddedE
 
     @Override
     protected SpecificRecordBase mapToAvro(HubEventProto event) {
-        return DeviceAddedEventAvro.newBuilder()
+        payload = DeviceAddedEventAvro.newBuilder()
                 .setId(event.getDeviceAdded().getId())
                 .setType(EnumMapper.map(event.getDeviceAdded().getType(), DeviceTypeAvro.class))
+                .build();
+
+        return HubEventAvro.newBuilder()
+                .setPayload(payload)
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setHubId(event.getHubId())
                 .build();
     }
 }

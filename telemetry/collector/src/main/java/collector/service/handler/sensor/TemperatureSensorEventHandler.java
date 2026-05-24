@@ -14,7 +14,7 @@ public class TemperatureSensorEventHandler extends BaseSensorEventHandler<Temper
     private TemperatureSensorEventHandler(KafkaEventProducer producer) {
         super(producer);
     }
-    Object payload;
+    private Object payload;
 
     @Override
     public SensorEventProto.PayloadCase getMessageType() {

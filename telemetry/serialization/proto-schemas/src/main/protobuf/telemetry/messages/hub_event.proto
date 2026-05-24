@@ -6,6 +6,7 @@ option java_multiple_files = true;
 option java_package = "ru.yandex.practicum.grpc.telemetry.event";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 
 message HubEventProto {
     string hub_id = 1;
@@ -59,6 +60,7 @@ message ScenarioConditionProto {
   oneof value {
     bool bool_value = 4;
     int32 int_value = 5;
+    google.protobuf.NullValue null = 6;
   }
 }
 
@@ -77,8 +79,8 @@ message DeviceActionProto {
 
 message ScenarioAddedEventProto {
     string name = 1;
-    repeated ScenarioConditionProto condition = 2; // набор условий активации сценария
-    repeated DeviceActionProto action = 3; // набор действий при активации сценария
+    repeated ScenarioConditionProto conditions = 2; // набор условий активации сценария
+    repeated DeviceActionProto actions = 3; // набор действий при активации сценария
 }
 
 message ScenarioRemovedEventProto {

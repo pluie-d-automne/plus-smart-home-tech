@@ -14,7 +14,7 @@ public class LightSensorEventHandler extends BaseSensorEventHandler<LightSensorA
     private LightSensorEventHandler(KafkaEventProducer producer) {
         super(producer);
     }
-    Object payload;
+    private Object payload;
 
     @Override
     public SensorEventProto.PayloadCase getMessageType() {
