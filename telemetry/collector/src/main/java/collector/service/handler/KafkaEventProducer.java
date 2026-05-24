@@ -2,7 +2,9 @@ package collector.service.handler;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.stereotype.Component;
 
+@Component
 public class KafkaEventProducer {
     private final KafkaClient client;
 
