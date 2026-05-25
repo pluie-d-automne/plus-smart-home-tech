@@ -11,10 +11,10 @@
 
     <artifactId>collector</artifactId>
 
-    <properties>
-        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
-        <lombok.version>1.18.32</lombok.version>
-    </properties>
+<!--    <properties>-->
+<!--        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>-->
+<!--        <lombok.version>1.18.32</lombok.version>-->
+<!--    </properties>-->
 
     <dependencies>
         <dependency>
@@ -64,12 +64,12 @@
             <scope>compile</scope>
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.jdbi/jdbi3-core -->
-        <dependency>
-            <groupId>org.jdbi</groupId>
-            <artifactId>jdbi3-core</artifactId>
-            <version>3.52.1</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jdbi</groupId>-->
+<!--            <artifactId>jdbi3-core</artifactId>-->
+<!--            <version>3.52.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>ma.glasnost.orika</groupId>-->
 <!--            <artifactId>orika-core</artifactId>-->
