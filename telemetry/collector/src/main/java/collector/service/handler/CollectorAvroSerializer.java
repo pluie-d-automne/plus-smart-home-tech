@@ -1,4 +1,4 @@
-package collector;
+package collector.service.handler;
 
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;

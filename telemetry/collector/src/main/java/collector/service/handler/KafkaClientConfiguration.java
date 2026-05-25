@@ -1,4 +1,4 @@
-package collector;
+package collector.service.handler;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Properties;
 
 @Configuration
-public class CollectorClientConfiguration {
+public class KafkaClientConfiguration {
     @Bean
-    CollectorClient getClient() {
-        return new CollectorClient() {
+    KafkaClient getClient() {
+        return new KafkaClient() {
 
             private Producer<String, SpecificRecordBase> producer;
 
@@ -29,7 +29,7 @@ public class CollectorClientConfiguration {
                 Properties config = new Properties();
                 config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
                 config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "collector.CollectorAvroSerializer");
+                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "collector.service.handler.CollectorAvroSerializer");
 
                 producer = new KafkaProducer<>(config);
             }

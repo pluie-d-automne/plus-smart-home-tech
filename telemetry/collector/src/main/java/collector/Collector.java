@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 @EnableScheduling
-public class CollectorApp {
+public class Collector {
     public static void main(String[] args) {
-        SpringApplication.run(CollectorApp.class, args);
+        SpringApplication.run(Collector.class, args);
     }
 }
