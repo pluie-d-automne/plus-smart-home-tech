@@ -10,7 +10,6 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan
-
 public class Aggregator {
 
     public static void main(String[] args) {

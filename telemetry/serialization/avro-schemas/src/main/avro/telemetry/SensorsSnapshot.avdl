@@ -1,7 +1,6 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 
 protocol SensorsSnapshotProtocol {
-
     import idl "SensorEvent.avdl";
 
   // Схема снапшота
