@@ -11,6 +11,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
@@ -26,13 +27,17 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class AggregationStarter {
-
     private final Consumer consumer;
     private final Producer producer;
+    private final SnapshotAggregation agg;
 
+    @Autowired
     public AggregationStarter(KafkaClient client) {
+        //KafkaClientConfiguration config = new KafkaClientConfiguration();
+        //KafkaClient client = config.getClient();
         this.consumer = client.getConsumer();
         this.producer = client.getProducer();
+        this.agg = new SnapshotAggregation();
     }
 
     /**
@@ -49,7 +54,7 @@ public class AggregationStarter {
                 for (ConsumerRecord<Void, SpecificRecordBase> record : records) {
                     if (record.value() instanceof SensorEventAvro) {
                         SensorEventAvro event = (SensorEventAvro) record.value();
-                        Optional<SensorsSnapshotAvro> snapshotAvro = SnapshotAggregation.updateState(event);
+                        Optional<SensorsSnapshotAvro> snapshotAvro = agg.updateState(event);
                         if (snapshotAvro.isPresent()) {
                             SensorsSnapshotAvro snapshot = snapshotAvro.get();
                             ProducerRecord<String, SpecificRecordBase> recordToSend = new ProducerRecord<>(KafkaTopics.TELEMETRY_SNAPSHOTS_TOPIC,

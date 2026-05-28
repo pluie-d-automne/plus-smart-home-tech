@@ -9,17 +9,15 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.Properties;
 
 @Configuration
 public class KafkaClientConfiguration {
     @Bean
-    KafkaClient getClient() {
+    public KafkaClient getClient() {
         return new KafkaClient() {
 
             private Consumer<String, SpecificRecordBase> consumer;
-
 
             private Producer<String, SpecificRecordBase> producer;
 
@@ -36,6 +34,7 @@ public class KafkaClientConfiguration {
                 config.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
                 config.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
                 config.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "aggregator.deserialization.SensorEventDeserializer");
+                config.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "aggregator");
                 consumer = new KafkaConsumer<>(config);
             }
 
@@ -51,7 +50,7 @@ public class KafkaClientConfiguration {
                 Properties config = new Properties();
                 config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
                 config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "collector.service.handler.CollectorAvroSerializer");
+                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "aggregator.deserialization.AvroSerializer");
 
                 producer = new KafkaProducer<>(config);
             }
