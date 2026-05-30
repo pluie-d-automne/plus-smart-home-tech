@@ -66,6 +66,9 @@ public class KafkaClientConfiguration {
                 if (producer != null) {
                     producer.close();
                 }
+                if (consumer !=null) {
+                    consumer.close();
+                }
             }
         };
     }

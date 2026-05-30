@@ -33,3 +33,50 @@ services:
                              --partitions 1 --replication-factor 1 --if-not-exists \
                              --bootstrap-server kafka:29092'"
     init: true
+
+  pgdb-analyzer:
+      container_name: pgdb-analyzer
+      image: postgres:16.1
+      ports:
+        - "5432:5432"
+      environment:
+        - POSTGRES_DB=analyzer
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=password
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -q -d analyzer -U user" ]
+        timeout: 5s
+        interval: 5s
+        retries: 10
+
+  analyzer:
+    container_name: analyzer
+    build: telemetry/analyzer
+    ports:
+      - "7070:7070"
+    depends_on:
+      pgdb-analyzer:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb-analyzer:5432/analyzer
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+
+  collector:
+    container_name: collector
+    build: telemetry/collector
+    ports:
+      - "8080:8080"
+      - "59091:59091"
+    depends_on:
+      kafka-init-topics:
+        condition: service_completed_successfully
+
+  aggregator:
+    container_name: aggregator
+    build: telemetry/aggregator
+    ports:
+      - "9090:9090"
+    depends_on:
+      kafka-init-topics:
+        condition: service_completed_successfully

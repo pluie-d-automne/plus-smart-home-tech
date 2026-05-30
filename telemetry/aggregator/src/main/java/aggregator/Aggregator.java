@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@ConfigurationProperties("application.yaml")
+//@ConfigurationProperties("application.yaml")
 //@Import(collector.service.handler.CollectorAvroSerializer)
 public class Aggregator {
 

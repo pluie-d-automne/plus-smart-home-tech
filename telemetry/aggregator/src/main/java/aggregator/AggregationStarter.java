@@ -61,6 +61,7 @@ public class AggregationStarter {
                             ProducerRecord<String, SpecificRecordBase> recordToSend = new ProducerRecord<>(env.getProperty("topic.snapshots"),
                                     snapshot.getHubId(),
                                     snapshot);
+                            log.info("Отправляю новый снапшот для хаба {} в кафку.", event.getId());
                             producer.send(recordToSend);
                         }
                     }

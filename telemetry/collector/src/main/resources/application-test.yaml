@@ -1,10 +1,9 @@
-spring.profiles.active: test
 grpc:
   server:
     port: 59091
 server:
   port: 8080
 kafka:
-  bootstrap.servers: "kafka:29092"
+  bootstrap.servers: "localhost:29092"
   key_serializer_class: "org.apache.kafka.common.serialization.StringSerializer"
   value_serializer_class: "collector.service.handler.CollectorAvroSerializer"

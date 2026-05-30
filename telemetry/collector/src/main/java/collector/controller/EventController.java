@@ -6,6 +6,7 @@ import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @GrpcService
+@Slf4j
 public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
     private final Map<SensorEventProto.PayloadCase, SensorEventHandler> sensorEventHandlers;
     private final Map<HubEventProto.PayloadCase, HubEventHandler> hubEventHandlers;
@@ -49,6 +51,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         try {
             // проверяем, есть ли обработчик для полученного события
             if (sensorEventHandlers.containsKey(request.getPayloadCase())) {
+                log.info("Получено событие сенсора {}", request.getPayloadCase());
                 // если обработчик найден, передаём событие ему на обработку
                 sensorEventHandlers.get(request.getPayloadCase()).handle(request);
             } else {
@@ -70,6 +73,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         try {
             // проверяем, есть ли обработчик для полученного события
             if (hubEventHandlers.containsKey(request.getPayloadCase())) {
+                log.info("Получено событие хаба {}", request.getPayloadCase());
                 // если обработчик найден, передаём событие ему на обработку
                 hubEventHandlers.get(request.getPayloadCase()).handle(request);
             } else {
