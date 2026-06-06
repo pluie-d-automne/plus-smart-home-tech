@@ -1,6 +1,8 @@
 package analyzer;
 
 
+import analyzer.service.HubEventProcessor;
+import analyzer.service.SnapshotProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,15 +16,15 @@ public class Analyzer {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Analyzer.class, args);
 
-        //final HubEventProcessor hubEventProcessor = context.getBean(HubEventProcessor.class);
-        //final SnapshotProcessor snapshotProcessor = context.getBean(SnapshotProcessor.class);
+        final HubEventProcessor hubEventProcessor = context.getBean(HubEventProcessor.class);
+        SnapshotProcessor snapshotProcessor = context.getBean(SnapshotProcessor.class);
 
-        // // запускаем в отдельном потоке обработчик событий от пользовательских хабов
-        //        Thread hubEventsThread = new Thread(hubEventProcessor);
-        //        hubEventsThread.setName("HubEventHandlerThread");
-        //        hubEventsThread.start();
-        //
-        //        // В текущем потоке начинаем обработку снимков состояния датчиков
-        //        snapshotProcessor.start();
+        //  запускаем в отдельном потоке обработчик событий от пользовательских хабов
+                Thread hubEventsThread = new Thread(hubEventProcessor);
+                hubEventsThread.setName("HubThread");
+                hubEventsThread.start();
+
+                // В текущем потоке начинаем обработку снимков состояния датчиков
+                snapshotProcessor.run();
     }
 }

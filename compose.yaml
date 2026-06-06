@@ -57,6 +57,8 @@ services:
     depends_on:
       pgdb-analyzer:
         condition: service_healthy
+      kafka-init-topics:
+        condition: service_completed_successfully
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb-analyzer:5432/analyzer
       - SPRING_DATASOURCE_USERNAME=user
