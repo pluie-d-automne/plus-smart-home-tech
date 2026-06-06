@@ -8,7 +8,6 @@ import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 import collector.utils.EnumMapper;
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.time.Instant;
 

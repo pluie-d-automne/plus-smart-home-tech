@@ -1,15 +1,14 @@
-spring.profiles.active: test
 server:
   port: 9090
 topic:
   sensors: telemetry.sensors.v1
   snapshots: telemetry.snapshots.v1
 consumer:
-  bootstrap_servers: kafka:29092
+  bootstrap_servers: localhost:9092
   key_deserializer_class: org.apache.kafka.common.serialization.StringDeserializer
   value_deserializer_class: aggregator.deserialization.SensorEventDeserializer
   group_id: aggregator
 producer:
-  bootstrap_servers: kafka:29092
+  bootstrap_servers: localhost:9092
   key_serializer_class: org.apache.kafka.common.serialization.StringSerializer
   value_serializer_class: aggregator.deserialization.AvroSerializer

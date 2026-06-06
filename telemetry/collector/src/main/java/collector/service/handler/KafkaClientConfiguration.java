@@ -1,16 +1,23 @@
 package collector.service.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.util.Properties;
 
+@Slf4j
 @Configuration
 public class KafkaClientConfiguration {
+    @Autowired
+    private Environment env;
+
     @Bean
     KafkaClient getClient() {
         return new KafkaClient() {
@@ -27,9 +34,14 @@ public class KafkaClientConfiguration {
 
             private void initProducer() {
                 Properties config = new Properties();
-                config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-                config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "collector.service.handler.CollectorAvroSerializer");
+                String bootstrap_servers = env.getProperty("kafka.bootstrap.servers");
+                String key_serializer_class = env.getProperty("kafka.key_serializer_class");
+                String value_serializer_class = env.getProperty("kafka.value_serializer_class");
+                log.info("Init Kafka producer with bootstrap_servers: {}, key_serializer: {}, value_serializer: {}",
+                        bootstrap_servers, key_serializer_class, value_serializer_class);
+                config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_servers);
+                config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, key_serializer_class);
+                config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, value_serializer_class);
 
                 producer = new KafkaProducer<>(config);
             }

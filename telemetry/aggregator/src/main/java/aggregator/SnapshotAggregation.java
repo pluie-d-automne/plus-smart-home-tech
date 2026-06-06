@@ -1,5 +1,6 @@
 package aggregator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorStateAvro;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class SnapshotAggregation {
     private Map<String, SensorsSnapshotAvro> snapshots;
@@ -26,13 +28,13 @@ public class SnapshotAggregation {
             if (sensorStates.containsKey(event.getId())) {
                 oldState = sensorStates.get(event.getId());
 
-                // Если новое состояние раньше текущего, то нечего обновлять
                 if (oldState.getTimestamp().isAfter(event.getTimestamp())) {
+                    log.info("Полученное состояние хаба {} раньше текущего. Снапшот не обновляю.", event.getId());
                     return Optional.empty();
                 }
 
-                // Если ничего не изменилось, тоже нечего обновлять
                 if (oldState.getData().equals(event.getPayload())) {
+                    log.info("Состояние хаба {} не изменилось. Снапшот не обновляю.", event.getId());
                     return Optional.empty();
                 }
             }
@@ -41,7 +43,7 @@ public class SnapshotAggregation {
             sensorStates = new HashMap<>();
         }
 
-        // если дошли до сюда, значит, пришли новые данные и снапшот нужно обновить
+        log.info("Обновляю снапшот для хаба {}.", event.getId());
         SensorStateAvro newState = new SensorStateAvro();
         newState.setData(event.getPayload());
         newState.setTimestamp(event.getTimestamp());

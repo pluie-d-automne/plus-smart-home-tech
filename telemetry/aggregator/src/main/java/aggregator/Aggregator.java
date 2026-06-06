@@ -4,15 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 
 /**
  * Главный класс сервиса Aggregator.
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan
-//@Import(collector.service.handler.CollectorAvroSerializer)
 public class Aggregator {
 
     public static void main(String[] args) {
