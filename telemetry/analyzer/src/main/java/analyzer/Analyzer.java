@@ -5,13 +5,11 @@ import analyzer.service.HubEventProcessor;
 import analyzer.service.SnapshotProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-//@ConfigurationProperties("application.yaml")
 public class Analyzer {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Analyzer.class, args);

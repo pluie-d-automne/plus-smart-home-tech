@@ -8,6 +8,7 @@ import analyzer.model.ConditionType;
 import analyzer.model.Scenario;
 import analyzer.repository.ScenarioRepository;
 import com.google.protobuf.Timestamp;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -26,7 +27,6 @@ import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorStateAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
-import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorAvro;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -61,44 +61,7 @@ public class SnapshotProcessor implements Runnable {
                     SensorsSnapshotAvro snapshot = (SensorsSnapshotAvro) record.value();
                     String hubId = snapshot.getHubId();
                     Map<String, SensorStateAvro> sensorStates = snapshot.getSensorsState();
-                    List<Scenario> scenarios = scenarioRepository.findByHubId(hubId);
-                    for (Scenario scenario : scenarios) {
-                        Map<String, Condition> conditions = scenario.getConditions();
-
-                        for (String sensorId : conditions.keySet()) {
-                            Condition condition = conditions.get(sensorId);
-                            SensorStateAvro state = sensorStates.get(sensorId);
-                            Integer sensorValue = getSensorValueByType(condition.getType(), state.getData());
-                            if (! compareCondition(condition.getOperation(), sensorValue, condition.getValue())) {
-                                log.info("Сценарий '{}' не проходит по условию '{}' для сенсора '{}'",
-                                        scenario.getName(), condition.getType(), sensorId );
-                                break;
-                            };
-                        }
-
-                        log.info("Выполнены все условия сценария '{}' на хабе '{}'", scenario.getName(), hubId);
-                        Map<String, Action> actions = scenario.getActions();
-                        for (String sensorId : actions.keySet()) {
-                            Action action = actions.get(sensorId);
-                            DeviceActionProto actionProto = DeviceActionProto.newBuilder()
-                                    .setSensorId(sensorId)
-                                    .setValue(action.getValue())
-                                    .setType(EnumMapper.map(action.getType(), ActionTypeProto.class))
-                                    .build();
-                            Instant now = Instant.now();
-                            DeviceActionRequest actionRequest = DeviceActionRequest.newBuilder()
-                                    .setAction(actionProto)
-                                    .setHubId(hubId)
-                                    .setScenarioName(scenario.getName())
-                                    .setTimestamp(Timestamp.newBuilder()
-                                            .setSeconds(now.getEpochSecond())
-                                            .setNanos(now.getNano())
-                                            .build())
-                                    .build();
-                            log.info("Send new action Request");
-                            producer.sendAction(actionRequest);
-                        }
-                    }
+                    handleHubScenarios(hubId, sensorStates);
                 }
             }
         } catch (WakeupException ignored) {
@@ -138,8 +101,55 @@ public class SnapshotProcessor implements Runnable {
             case CO2LEVEL -> {return ((ClimateSensorAvro) stateData).getCo2Level();}
             case HUMIDITY -> {return ((ClimateSensorAvro) stateData).getHumidity();}
             case LUMINOSITY -> {return ((LightSensorAvro) stateData).getLuminosity();}
-            case TEMPERATURE -> {return ((TemperatureSensorAvro) stateData).getTemperatureC();}
+            case TEMPERATURE -> {return ((ClimateSensorAvro) stateData).getTemperatureC();}
             default -> {return null;}
+        }
+    }
+
+    @Transactional
+    private void handleHubScenarios(String hubId, Map<String, SensorStateAvro> sensorStates) {
+        List<Scenario> scenarios = scenarioRepository.findByHubId(hubId);
+        for (Scenario scenario : scenarios) {
+            Map<String, Condition> conditions = scenario.getConditions();
+
+            for (String sensorId : conditions.keySet()) {
+                Condition condition = conditions.get(sensorId);
+                SensorStateAvro state = sensorStates.get(sensorId);
+                if (state == null) {
+                    log.info("Сценарий '{}' не проходит, так как отсутствует состояние для сенсора '{}'",
+                            scenario.getName(), sensorId );
+                    break;
+                }
+                Integer sensorValue = getSensorValueByType(condition.getType(), state.getData());
+                if (! compareCondition(condition.getOperation(), sensorValue, condition.getValue())) {
+                    log.info("Сценарий '{}' не проходит по условию '{}' для сенсора '{}'",
+                            scenario.getName(), condition.getType(), sensorId );
+                    break;
+                };
+            }
+
+            log.info("Выполнены все условия сценария '{}' на хабе '{}'", scenario.getName(), hubId);
+            Map<String, Action> actions = scenario.getActions();
+            for (String sensorId : actions.keySet()) {
+                Action action = actions.get(sensorId);
+                DeviceActionProto actionProto = DeviceActionProto.newBuilder()
+                        .setSensorId(sensorId)
+                        .setValue(action.getValue())
+                        .setType(EnumMapper.map(action.getType(), ActionTypeProto.class))
+                        .build();
+                Instant now = Instant.now();
+                DeviceActionRequest actionRequest = DeviceActionRequest.newBuilder()
+                        .setAction(actionProto)
+                        .setHubId(hubId)
+                        .setScenarioName(scenario.getName())
+                        .setTimestamp(Timestamp.newBuilder()
+                                .setSeconds(now.getEpochSecond())
+                                .setNanos(now.getNano())
+                                .build())
+                        .build();
+                log.info("Send new action Request");
+                producer.sendAction(actionRequest);
+            }
         }
     }
 
