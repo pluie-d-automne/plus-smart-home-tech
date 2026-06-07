@@ -47,6 +47,10 @@ public class HubEventProcessor implements Runnable {
     @Override
     public void run() {
         Consumer consumer = client.getConsumer("hubs");
+
+        // Хук для завершения JVM
+        Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
+
         try {
             // подписка на топики
             String topic = properties.getProperty("hubs.topic");

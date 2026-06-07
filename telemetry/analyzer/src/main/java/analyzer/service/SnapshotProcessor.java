@@ -48,6 +48,9 @@ public class SnapshotProcessor implements Runnable {
     public void run() {
         Consumer consumer = client.getConsumer("snapshots");
 
+        // Хук для завершения JVM
+        Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
+
         try {
             // подписка на топики
             String topic = properties.getProperty("snapshots.topic");

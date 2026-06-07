@@ -47,6 +47,9 @@ public class AggregationStarter {
      * формирует снимок их состояния и записывает в кафку.
      */
     public void start() {
+        // Хук для завершения JVM
+        Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
+
         try {
             consumer.subscribe(List.of(env.getProperty("topic.sensors")));
             // Цикл обработки событий
