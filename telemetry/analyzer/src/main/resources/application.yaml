@@ -1,40 +1,13 @@
-spring.profiles.active: test
-server:
-  port: 7070
-kafka:
-  properties:
-    hubs:
-      "bootstrap.servers": "kafka:29092"
-      topic: "telemetry.hubs.v1"
-      key_deserializer_class: "org.apache.kafka.common.serialization.StringDeserializer"
-      value_deserializer_class: "analyzer.kafka.HubsEventDeserializer"
-      group_id: "analyzer.hubs.reader"
-    snapshots:
-      "bootstrap.servers": "kafka:29092"
-      topic: "telemetry.snapshots.v1"
-      key_deserializer_class: "org.apache.kafka.common.serialization.StringDeserializer"
-      value_deserializer_class: "analyzer.kafka.SnapshotsEventDeserializer"
-      group_id: "analyzer.snapshots.reader"
 spring:
-  datasource:
-    driverClassName: "org.postgresql.Driver"
-    url: "jdbc:postgresql://pgdb-analyzer:5432/analyzer"
-    username: "user"
-    password: "password"
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  sql:
-    init:
-      mode: always
-grpc:
-  client:
-    hub-router:
-      address: 'static://localhost:59090'
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
-      negotiationType: plaintext
+  application:
+    name: analyzer
+
+  config:
+    # import: configserver:http://localhost:8888
+    import: configserver:http://config-server:8888
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
