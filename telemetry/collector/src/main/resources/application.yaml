@@ -1,10 +1,12 @@
-spring.profiles.active: test
-grpc:
-  server:
-    port: 59091
-server:
-  port: 8080
-kafka:
-  bootstrap.servers: "kafka:29092"
-  key_serializer_class: "org.apache.kafka.common.serialization.StringSerializer"
-  value_serializer_class: "collector.service.handler.CollectorAvroSerializer"
+spring:
+  application:
+    name: collector
+  config:
+    #import: configserver:http://localhost:8888
+    import: configserver:http://config-server:8888
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
