@@ -97,3 +97,11 @@ services:
       - "8888:8888"
     volumes:
       - ./config:/config
+
+  discovery-server:
+    container_name: discovery-server
+    build: infra/discovery-server
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./config:/config
