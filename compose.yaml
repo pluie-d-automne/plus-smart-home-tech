@@ -1,107 +1,152 @@
 services:
-  kafka:
-    image: confluentinc/confluent-local:7.4.3
-    hostname: kafka
-    container_name: kafka
+#  kafka:
+#    image: confluentinc/confluent-local:7.4.3
+#    hostname: kafka
+#    container_name: kafka
+#    ports:
+#      - "9092:9092" # for client connections
+#      - "9101:9101" # JMX
+#    restart: unless-stopped
+#    environment:
+#      KAFKA_NODE_ID: 1
+#      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+#      KAFKA_JMX_PORT: 9101
+#      KAFKA_JMX_HOSTNAME: localhost
+#      KAFKA_PROCESS_ROLES: 'broker,controller'
+#      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+#      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+#      CLUSTER_ID: 'K0EA9p0yEe6MkAAAAkKsEg'
+#
+#  kafka-init-topics:
+#    image: confluentinc/confluent-local:7.4.3
+#    container_name: kafka-init-topics
+#    depends_on:
+#      - kafka
+#    command: "bash -c \
+#                'kafka-topics --create --topic telemetry.sensors.v1 \
+#                             --partitions 1 --replication-factor 1 --if-not-exists \
+#                             --bootstrap-server kafka:29092 && \
+#                kafka-topics --create --topic telemetry.snapshots.v1 \
+#                             --partitions 1 --replication-factor 1 --if-not-exists \
+#                             --bootstrap-server kafka:29092 && \
+#                kafka-topics --create --topic telemetry.hubs.v1 \
+#                             --partitions 1 --replication-factor 1 --if-not-exists \
+#                             --bootstrap-server kafka:29092'"
+#    init: true
+#
+#  pgdb-analyzer:
+#      container_name: pgdb-analyzer
+#      image: postgres:16.1
+#      ports:
+#        - "5432:5432"
+#      environment:
+#        - POSTGRES_DB=analyzer
+#        - POSTGRES_USER=user
+#        - POSTGRES_PASSWORD=password
+#      healthcheck:
+#        test: [ "CMD-SHELL", "pg_isready -q -d analyzer -U user" ]
+#        timeout: 5s
+#        interval: 5s
+#        retries: 10
+
+  pgdb-shopping-store:
+    container_name: pgdb-shopping-store
+    image: postgres:16.1
     ports:
-      - "9092:9092" # for client connections
-      - "9101:9101" # JMX
-    restart: unless-stopped
+      - "6432:5432"
     environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_PROCESS_ROLES: 'broker,controller'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092'
-      CLUSTER_ID: 'K0EA9p0yEe6MkAAAAkKsEg'
+      - POSTGRES_DB=shopping-store
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d shopping-store -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
-  kafka-init-topics:
-    image: confluentinc/confluent-local:7.4.3
-    container_name: kafka-init-topics
-    depends_on:
-      - kafka
-    command: "bash -c \
-                'kafka-topics --create --topic telemetry.sensors.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092 && \
-                kafka-topics --create --topic telemetry.snapshots.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092 && \
-                kafka-topics --create --topic telemetry.hubs.v1 \
-                             --partitions 1 --replication-factor 1 --if-not-exists \
-                             --bootstrap-server kafka:29092'"
-    init: true
-
-  pgdb-analyzer:
-      container_name: pgdb-analyzer
-      image: postgres:16.1
-      ports:
-        - "5432:5432"
-      environment:
-        - POSTGRES_DB=analyzer
-        - POSTGRES_USER=user
-        - POSTGRES_PASSWORD=password
-      healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -q -d analyzer -U user" ]
-        timeout: 5s
-        interval: 5s
-        retries: 10
-
-  analyzer:
-    container_name: analyzer
-    build: telemetry/analyzer
+  pgdb-shopping-cart:
+    container_name: pgdb-shopping-cart
+    image: postgres:16.1
     ports:
-      - "7070:7070"
-    depends_on:
-      pgdb-analyzer:
-        condition: service_healthy
-      kafka-init-topics:
-        condition: service_completed_successfully
-      config-server:
-        condition: service_started
+      - "7432:5432"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb-analyzer:5432/analyzer
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8085/config-server
+      - POSTGRES_DB=shopping-cart
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d shopping-cart -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
-  collector:
-    container_name: collector
-    build: telemetry/collector
+  pgdb-warehouse:
+    container_name: pgdb-warehouse
+    image: postgres:16.1
     ports:
-      - "8080:8080"
-      - "59091:59091"
-    depends_on:
-      kafka-init-topics:
-        condition: service_completed_successfully
-      config-server:
-        condition: service_started
+      - "8432:5432"
+    environment:
+      - POSTGRES_DB=warehouse
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d warehouse -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
-  aggregator:
-    container_name: aggregator
-    build: telemetry/aggregator
-    ports:
-      - "9090:9090"
-    depends_on:
-      kafka-init-topics:
-        condition: service_completed_successfully
-      config-server:
-        condition: service_started
-
-  config-server:
-    container_name: config-server
-    build: infra/config-server
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./config:/config
-
-  discovery-server:
-    container_name: discovery-server
-    build: infra/discovery-server
-    ports:
-      - "8761:8761"
-    volumes:
-      - ./config:/config
+#  analyzer:
+#    container_name: analyzer
+#    build: telemetry/analyzer
+#    ports:
+#      - "7070:7070"
+#    depends_on:
+#      pgdb-analyzer:
+#        condition: service_healthy
+#      kafka-init-topics:
+#        condition: service_completed_successfully
+#      config-server:
+#        condition: service_started
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb-analyzer:5432/analyzer
+#      - SPRING_DATASOURCE_USERNAME=user
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_CLOUD_CONFIG_URI=http://config-server:8085/config-server
+#
+#  collector:
+#    container_name: collector
+#    build: telemetry/collector
+#    ports:
+#      - "8080:8080"
+#      - "59091:59091"
+#    depends_on:
+#      kafka-init-topics:
+#        condition: service_completed_successfully
+#      config-server:
+#        condition: service_started
+#
+#  aggregator:
+#    container_name: aggregator
+#    build: telemetry/aggregator
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      kafka-init-topics:
+#        condition: service_completed_successfully
+#      config-server:
+#        condition: service_started
+#
+#  config-server:
+#    container_name: config-server
+#    build: infra/config-server
+#    ports:
+#      - "8888:8888"
+#    volumes:
+#      - ./config:/config
+#
+#  discovery-server:
+#    container_name: discovery-server
+#    build: infra/discovery-server
+#    ports:
+#      - "8761:8761"
+#    volumes:
+#      - ./config:/config

@@ -20,7 +20,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--        <dependency>-->
 <!--            <groupId>org.springdoc</groupId>-->
 <!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
 <!--        </dependency>-->

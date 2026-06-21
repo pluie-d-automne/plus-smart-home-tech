@@ -24,7 +24,7 @@
 
 ## Commerce
 
-### shopping-store - витрина товаров.
+### shopping-store - витрина товаров
 Покупатели интернет-магазина будут получать из этого сервиса информацию о доступных товарах и на её основе
 принимать решение о покупке.
 
@@ -32,3 +32,21 @@
 ```bash
 docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/shopping-store13012026.json swaggerapi/swagger-ui
 ```
+
+### shopping-cart - корзина покупателя
+Покупатели будут выбирать товары с витрины и добавлять их в корзину.
+В дальнейшем на основе этой информации будет оформлен заказ.
+
+Спецификации OpenApi для сервиса shopping-cart в SwaggerUI:
+```bash
+docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/shopping-cart-16062025.json swaggerapi/swagger-ui
+```
+
+## Infra
+
+### Config Server
+
+
+### DiscoveryServer
+Eureka Server at http://localhost:8761/
+GET http://localhost:8761/eureka/v2/apps
