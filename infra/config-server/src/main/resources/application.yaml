@@ -9,11 +9,17 @@ spring:
         native:
           searchLocations:
             - classpath:config/telemetry/{application}
+            - classpath:config/commerce/{application}
 server:
-  port: 8888
+  port: 0
 eureka:
   client:
     registerWithEureka: true
     serviceUrl:
-      #defaultZone: http://localhost:8761/eureka/
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    preferIpAddress: true
+    hostname: loaclhost
+    instance-id: "${spring.application.name}:${random.value}"
+    leaseRenewalIntervalInSeconds: 10
