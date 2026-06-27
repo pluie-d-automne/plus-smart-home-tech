@@ -22,5 +22,5 @@ public class ChangeProductQuantityRequestDto {
 
     @NotNull
     @PositiveOrZero
-    int newQuantity;
+    Long newQuantity;
 }

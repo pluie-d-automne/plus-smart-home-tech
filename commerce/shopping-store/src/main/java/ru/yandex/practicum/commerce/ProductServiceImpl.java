@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.commerce.dto.shopping.product.PageProductDto;
+import ru.yandex.practicum.commerce.dto.shopping.product.ProductCategory;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductDto;
 import ru.yandex.practicum.commerce.dto.shopping.product.QuantityState;
 import ru.yandex.practicum.commerce.dto.shopping.product.SetProductQuantityStateRequest;
@@ -28,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductById(String productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(UUID.fromString(productId))
+    public ProductDto getProductById(UUID productId) throws ProductNotFoundException {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(
                         "Product with id=" + productId + " was not found"));
         return productMapper.toDto(product);
@@ -46,8 +47,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean delete(String productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(UUID.fromString(productId))
+    public boolean delete(UUID productId) throws ProductNotFoundException {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(
                         "Product with id=" + productId + " was not found"));
         try {
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageProductDto getProductsByCategory(String category, int page, int size, List<String> sort) {
+    public PageProductDto getProductsByCategory(ProductCategory category, int page, int size, List<String> sort) {
         Sort sorting = null;
 
         for (int x = 0; x < sort.size(); x = x+2) {

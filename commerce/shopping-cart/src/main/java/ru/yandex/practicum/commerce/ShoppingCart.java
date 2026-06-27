@@ -7,17 +7,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.commerce.dto.shopping.product.QuantityState;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -36,6 +33,9 @@ public class ShoppingCart {
     @Column(name = "state", nullable = false)
     ShoppingCartState state;
 
-    @Column(name = "user", nullable = false)
+    @Column(name = "user_name", nullable = false)
     String user;
+
+    @OneToMany(mappedBy="cart")
+    Set<ShoppingCartContent> products;
 }

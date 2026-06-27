@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.commerce.contract.shopping.store.ShoppingStoreOperations;
 import ru.yandex.practicum.commerce.dto.shopping.product.PageProductDto;
+import ru.yandex.practicum.commerce.dto.shopping.product.ProductCategory;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductDto;
 import ru.yandex.practicum.commerce.dto.shopping.product.SetProductQuantityStateRequest;
 import ru.yandex.practicum.commerce.exception.ProductNotFoundException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -39,7 +41,7 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
     @Override
     @GetMapping("/{productId}")
-    public ProductDto getProductById(@PathVariable String productId) throws ProductNotFoundException {
+    public ProductDto getProductById(@PathVariable UUID productId) throws ProductNotFoundException {
         log.info("Looking for product by id={}", productId);
         ProductDto product = productService.getProductById(productId);
         log.info("Found product: {}", product);
@@ -59,7 +61,7 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
     @Override
     @PostMapping("/removeProductFromStore")
-    public boolean deleteProduct(@RequestBody String productId) throws ProductNotFoundException {
+    public boolean deleteProduct(@RequestBody UUID productId) throws ProductNotFoundException {
         log.info("Deleting product with id={}", productId);
         boolean result = productService.delete(productId);
 
@@ -89,7 +91,7 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
     @Override
     @GetMapping
-    public PageProductDto getProductsByCategory(@RequestParam String category,
+    public PageProductDto getProductsByCategory(@RequestParam ProductCategory category,
                                          @RequestParam int page,
                                          @RequestParam int size,
                                          @RequestParam List<String> sort) {

@@ -11,6 +11,7 @@ import ru.yandex.practicum.commerce.dto.shopping.cart.ChangeProductQuantityReque
 import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.commerce.exception.NotAuthorizedUserException;
+import ru.yandex.practicum.commerce.exception.ShoppingCartNotFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,10 @@ public interface ShoppingCartOperations {
 
     @PutMapping
     ShoppingCartDto addProductsToCart(@RequestParam String username,
-                                      @RequestBody Map<UUID, Integer> productsToAdd) throws NotAuthorizedUserException;
+                                      @RequestBody Map<UUID, Long> productsToAdd) throws NotAuthorizedUserException;
 
     @DeleteMapping
-    void deactivateCart(@RequestParam String username) throws NotAuthorizedUserException;
+    void deactivateCart(@RequestParam String username) throws NotAuthorizedUserException, ShoppingCartNotFoundException;
 
     @PostMapping("/remove")
     ShoppingCartDto removeProductsFromCart(@RequestParam String username,

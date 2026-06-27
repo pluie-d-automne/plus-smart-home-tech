@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS shopping_carts;
 CREATE TABLE IF NOT EXISTS shopping_carts (
   uuid UUID NOT NULL DEFAULT uuid_generate_v4 (),
   state VARCHAR NOT NULL,
-  user VARCHAR NOT NULL,
+  user_name VARCHAR NOT NULL,
   CONSTRAINT pk_shopping_carts PRIMARY KEY (uuid)
  );
 
