@@ -1,17 +1,19 @@
 package ru.yandex.practicum.commerce.dto.shopping.product;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageProductDto {
-    List<ProductDto> content;
-    List<SortObject> sort;
+public class SortObject {
+    @NotNull
+    String direction; //"ASC" or "DESC"
+    @NotNull
+    String property;
+
 }

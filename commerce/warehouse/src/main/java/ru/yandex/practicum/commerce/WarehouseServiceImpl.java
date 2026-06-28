@@ -37,7 +37,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         if (productFound.isPresent()) {
             throw new SpecifiedProductAlreadyInWarehouseException("Товар с таким описанием уже зарегистрирован на складе: " + productFound.get());
         } else {
-            WarehouseProduct productSaved = warehouseRepository.save(productMapper.fromNewRequest(productRequest));
+            WarehouseProduct product = productMapper.fromNewRequest(productRequest);
+            log.info("Get product {} from productRequest {}", product, productRequest);
+            WarehouseProduct productSaved = warehouseRepository.save(product);
             log.info("Added new product to warehouse: {}", productSaved);
         }
     }

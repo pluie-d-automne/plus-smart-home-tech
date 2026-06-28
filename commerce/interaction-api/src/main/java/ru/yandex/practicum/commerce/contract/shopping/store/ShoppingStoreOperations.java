@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.commerce.dto.shopping.product.PageProductDto;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductCategory;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductDto;
+import ru.yandex.practicum.commerce.dto.shopping.product.QuantityState;
 import ru.yandex.practicum.commerce.dto.shopping.product.SetProductQuantityStateRequest;
 import ru.yandex.practicum.commerce.exception.ProductNotFoundException;
 
@@ -23,8 +24,8 @@ public interface ShoppingStoreOperations {
 
     @GetMapping
     PageProductDto getProductsByCategory(@RequestParam ProductCategory category,
-                                         @RequestParam int page,
-                                         @RequestParam int size,
+                                         @RequestParam Integer page,
+                                         @RequestParam Integer size,
                                          @RequestParam List<String> sort);
 
     @GetMapping("/{productId}")
@@ -37,5 +38,6 @@ public interface ShoppingStoreOperations {
     boolean deleteProduct(@RequestBody UUID productId) throws ProductNotFoundException;
 
     @PostMapping("/quantityState")
-    boolean updateQuantityState(@RequestBody SetProductQuantityStateRequest quantityState) throws ProductNotFoundException;
+    //boolean updateQuantityState(@RequestBody SetProductQuantityStateRequest quantityState) throws ProductNotFoundException;
+    boolean updateQuantityState(@RequestParam UUID productId, @RequestParam QuantityState quantityState) throws ProductNotFoundException;
 }

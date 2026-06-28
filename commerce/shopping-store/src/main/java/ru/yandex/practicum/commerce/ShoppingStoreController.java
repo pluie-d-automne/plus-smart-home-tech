@@ -15,6 +15,7 @@ import ru.yandex.practicum.commerce.contract.shopping.store.ShoppingStoreOperati
 import ru.yandex.practicum.commerce.dto.shopping.product.PageProductDto;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductCategory;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductDto;
+import ru.yandex.practicum.commerce.dto.shopping.product.QuantityState;
 import ru.yandex.practicum.commerce.dto.shopping.product.SetProductQuantityStateRequest;
 import ru.yandex.practicum.commerce.exception.ProductNotFoundException;
 
@@ -76,9 +77,11 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
     @Override
     @PostMapping("/quantityState")
-    public boolean updateQuantityState(@RequestBody SetProductQuantityStateRequest quantityState) throws ProductNotFoundException {
+    //public boolean updateQuantityState(@RequestBody SetProductQuantityStateRequest quantityState) throws ProductNotFoundException {
+    public boolean updateQuantityState(@RequestParam UUID productId, @RequestParam QuantityState quantityState) throws ProductNotFoundException {
+        SetProductQuantityStateRequest quantityStateRequest = SetProductQuantityStateRequest.builder().productId(productId).quantityState(quantityState).build();
         log.info("Updating quantityState: {}", quantityState);
-        boolean result = productService.updateQuantityState(quantityState);
+        boolean result = productService.updateQuantityState(quantityStateRequest);
 
         if (result) {
             log.info("Updated quantityState: {}", quantityState);
@@ -92,9 +95,9 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
     @Override
     @GetMapping
     public PageProductDto getProductsByCategory(@RequestParam ProductCategory category,
-                                         @RequestParam int page,
-                                         @RequestParam int size,
-                                         @RequestParam List<String> sort) {
+                                         @RequestParam(defaultValue = "0") Integer page,
+                                         @RequestParam(defaultValue = "20") Integer size,
+                                         @RequestParam(defaultValue = "productId,ASC") List<String> sort) {
         log.info("Get products by category {}, page={}, size={}, sort={}", category, page, size, sort);
         PageProductDto result = productService.getProductsByCategory(category, page, size, sort);
         log.info("Result: {}", result);

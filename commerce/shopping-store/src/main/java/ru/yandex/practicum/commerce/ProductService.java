@@ -20,5 +20,5 @@ public interface ProductService {
 
     boolean updateQuantityState(SetProductQuantityStateRequest quantityState) throws ProductNotFoundException;
 
-    PageProductDto getProductsByCategory(ProductCategory category, int page, int size, List<String> sort);
+    PageProductDto getProductsByCategory(ProductCategory category, Integer page, Integer size, List<String> sort);
 }

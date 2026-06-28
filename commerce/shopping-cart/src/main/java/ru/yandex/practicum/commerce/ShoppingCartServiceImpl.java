@@ -49,6 +49,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         Set<ShoppingCartContent> newProducts = func.mapContent(productsToAdd);
+        log.info("Mapped  newProducts {} from mapping {}", newProducts, productsToAdd);
         if (shoppingCart.getProducts() != null) {
             products = shoppingCart.getProducts();
             products.addAll(newProducts);
@@ -56,7 +57,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             products = newProducts;
         }
 
+        log.info("Updated products: {}", products);
         shoppingCart.setProducts(products);
+        log.info("Shopping cart to be saved: {}", shoppingCart);
         ShoppingCart newShoppingCart = cartRepository.save(shoppingCart);
         log.info("Shopping cart was updated: {}", shoppingCart);
         return cartMapper.toDto(newShoppingCart);

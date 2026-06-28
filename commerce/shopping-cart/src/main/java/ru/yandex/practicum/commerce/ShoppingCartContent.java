@@ -1,5 +1,6 @@
 package ru.yandex.practicum.commerce;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -29,7 +31,8 @@ public class ShoppingCartContent {
     Long quantity;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @ToString.Exclude
     @JoinColumn(name = "shopping_cart_id", nullable = false)
     ShoppingCart cart;
 }
