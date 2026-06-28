@@ -42,6 +42,16 @@ docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/sho
 docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/shopping-cart-16062025.json swaggerapi/swagger-ui
 ```
 
+### warehouse - склад
+* Управление товарами на складе
+* Проверка доступности товаров на складе
+* Получение адреса склада
+
+Спецификации OpenApi для сервиса warehouse в SwaggerUI:
+```bash
+docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/warehouse-06022025.json swaggerapi/swagger-ui
+```
+
 ## Infra
 
 ### Config Server

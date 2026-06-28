@@ -16,7 +16,7 @@ import ru.yandex.practicum.commerce.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "shopping-cart", path = "/api/v1/shopping-store")
+@FeignClient(name = "shopping-store", path = "/api/v1/shopping-store")
 public interface ShoppingStoreOperations {
     @PutMapping
     ProductDto addProduct(@RequestBody ProductDto productDto);
