@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,15 +30,16 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
-    UUID shoppingCartId;
+    private UUID shoppingCartId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    ShoppingCartState state;
+    private ShoppingCartState state;
 
     @Column(name = "user_name", nullable = false)
-    String user;
+    private String user;
 
-    @OneToMany(mappedBy="cart")
-    Set<ShoppingCartContent> products;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="shopping_cart_id", referencedColumnName="uuid")
+    private Set<ShoppingCartContent> products;
 }

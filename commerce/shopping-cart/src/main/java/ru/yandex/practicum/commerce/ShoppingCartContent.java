@@ -25,14 +25,13 @@ import java.util.UUID;
 public class ShoppingCartContent {
     @Id
     @Column(name = "product_id", nullable = false)
-    UUID productId;
+    private UUID productId;
 
     @Column(name = "quantity", nullable = false)
-    Long quantity;
+    private Long quantity;
 
     @Id
-    @ManyToOne(fetch = FetchType.EAGER)
-    @ToString.Exclude
-    @JoinColumn(name = "shopping_cart_id", nullable = false)
-    ShoppingCart cart;
+    //@ToString.Exclude
+    @Column(name = "shopping_cart_id", nullable = false)
+    private UUID shoppingCartId;
 }

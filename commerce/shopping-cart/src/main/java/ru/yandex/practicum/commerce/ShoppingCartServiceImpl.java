@@ -44,11 +44,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart = shoppingCartCheck.get();
             log.info("User {} already has an active shopping cart: {}", username, shoppingCart);
         } else {
-            shoppingCart = ShoppingCart.builder().user(username).state(ShoppingCartState.ACTIVE).build();
+            shoppingCart = cartRepository.save(ShoppingCart.builder().user(username).state(ShoppingCartState.ACTIVE).build());
             log.info("Creating new shopping cart: {}", shoppingCart);
         }
 
-        Set<ShoppingCartContent> newProducts = func.mapContent(productsToAdd);
+        Set<ShoppingCartContent> newProducts = func.mapContent(productsToAdd, shoppingCart.getShoppingCartId());
         log.info("Mapped  newProducts {} from mapping {}", newProducts, productsToAdd);
         if (shoppingCart.getProducts() != null) {
             products = shoppingCart.getProducts();
@@ -117,16 +117,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         if (shoppingCartFound.isPresent()) {
             shoppingCart = shoppingCartFound.get();
-            Set<ShoppingCartContent> newProducts = shoppingCart.getProducts().stream()
-                    .filter(product -> !productIds.contains(product.getProductId()))
+
+            Set<ShoppingCartContent> productsToRemove = shoppingCart.getProducts().stream()
+                    .filter(product -> productIds.contains(product.getProductId()))
                     .collect(Collectors.toSet());
-            shoppingCart.setProducts(newProducts);
+            shoppingCart.getProducts().remove(productsToRemove);
         } else {
             shoppingCart = cartRepository.save(ShoppingCart.builder()
                     .user(username)
                     .state(ShoppingCartState.ACTIVE)
                     .build());
         }
+        
         ShoppingCart shoppingCartUpd = cartRepository.save(shoppingCart);
         return cartMapper.toDto(shoppingCartUpd);
     }
@@ -143,7 +145,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         UUID productId = productToChange.getProductId();
         Long newQauntity = productToChange.getNewQuantity();
         ShoppingCart shoppingCart;
-        Set<ShoppingCartContent> newProducts = new HashSet<>();;
         Optional<ShoppingCart> shoppingCartFound = cartRepository.findByUserAndState(username, ShoppingCartState.ACTIVE);
 
         if (shoppingCartFound.isPresent()) {
@@ -153,11 +154,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 if (product.getProductId().equals(productId)) {
                     product.setQuantity(newQauntity);
                 }
-                newProducts.add(product);
+                //newProducts.add(product);
             }
 
-            shoppingCart.setProducts(newProducts);
+            //shoppingCart.setProducts(newProducts);
         } else {
+            Set<ShoppingCartContent> newProducts = new HashSet<>();
             newProducts.add(ShoppingCartContent.builder().productId(productId).quantity(newQauntity).build());
             shoppingCart = cartRepository.save(ShoppingCart.builder()
                     .user(username)
@@ -165,6 +167,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .products(newProducts)
                     .build());
         }
+
         ShoppingCart shoppingCartUpd = cartRepository.save(shoppingCart);
         return cartMapper.toDto(shoppingCartUpd);
     }

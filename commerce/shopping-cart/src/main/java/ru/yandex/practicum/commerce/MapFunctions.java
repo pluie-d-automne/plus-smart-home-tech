@@ -10,11 +10,15 @@ import java.util.UUID;
 
 @Component
 public class MapFunctions {
-    public Set<ShoppingCartContent> mapContent(Map<UUID,Long> productQuantities) {
+    public Set<ShoppingCartContent> mapContent(Map<UUID,Long> productQuantities, UUID shoppingCartId) {
         Set<ShoppingCartContent> content = new HashSet<>();
 
         for (UUID uuid : productQuantities.keySet()) {
-            content.add(ShoppingCartContent.builder().productId(uuid).quantity(productQuantities.get(uuid)).build());
+            content.add(ShoppingCartContent.builder()
+                    .productId(uuid)
+                    .quantity(productQuantities.get(uuid))
+                    .shoppingCartId(shoppingCartId)
+                    .build());
         }
 
         return content;
