@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.commerce.contract.warehouse.WarehouseOperations;
 import ru.yandex.practicum.commerce.dto.shopping.cart.ChangeProductQuantityRequestDto;
 import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.exception.NoProductsInShoppingCartException;
@@ -26,6 +27,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository cartRepository;
     private final ShoppingCartMapper cartMapper;
     private final MapFunctions func;
+    private final WarehouseOperations warehouseOperations;
 
     @Override
     @Transactional
@@ -50,6 +52,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         Set<ShoppingCartContent> newProducts = func.mapContent(productsToAdd, shoppingCart.getShoppingCartId());
         log.info("Mapped  newProducts {} from mapping {}", newProducts, productsToAdd);
+
         if (shoppingCart.getProducts() != null) {
             products = shoppingCart.getProducts();
             products.addAll(newProducts);
@@ -60,6 +63,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         log.info("Updated products: {}", products);
         shoppingCart.setProducts(products);
         log.info("Shopping cart to be saved: {}", shoppingCart);
+        log.info("Cheking products at warehouse.");
+        warehouseOperations.checkBookingProducts(cartMapper.toDto(shoppingCart));
         ShoppingCart newShoppingCart = cartRepository.save(shoppingCart);
         log.info("Shopping cart was updated: {}", shoppingCart);
         return cartMapper.toDto(newShoppingCart);
@@ -128,7 +133,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .state(ShoppingCartState.ACTIVE)
                     .build());
         }
-        
+
         ShoppingCart shoppingCartUpd = cartRepository.save(shoppingCart);
         return cartMapper.toDto(shoppingCartUpd);
     }
@@ -154,10 +159,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 if (product.getProductId().equals(productId)) {
                     product.setQuantity(newQauntity);
                 }
-                //newProducts.add(product);
             }
-
-            //shoppingCart.setProducts(newProducts);
         } else {
             Set<ShoppingCartContent> newProducts = new HashSet<>();
             newProducts.add(ShoppingCartContent.builder().productId(productId).quantity(newQauntity).build());

@@ -14,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SetProductQuantityStateRequest {
     @NotNull
-    UUID productId;
+    private UUID productId;
 
     @NotNull
-    QuantityState quantityState;
+    private QuantityState quantityState;
 }

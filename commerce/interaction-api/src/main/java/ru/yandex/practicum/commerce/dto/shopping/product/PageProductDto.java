@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageProductDto {
-    List<ProductDto> content;
-    List<SortObject> sort;
+    private List<ProductDto> content;
+    private List<SortObject> sort;
 }

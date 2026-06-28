@@ -3,9 +3,11 @@ package ru.yandex.practicum.commerce;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
+@EnableFeignClients("ru.yandex.practicum.commerce.contract")
 public class WarehouseApp {
     public static void main(String[] args) {
         SpringApplication.run(WarehouseApp.class, args);

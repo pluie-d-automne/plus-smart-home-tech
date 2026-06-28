@@ -77,7 +77,6 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
 
     @Override
     @PostMapping("/quantityState")
-    //public boolean updateQuantityState(@RequestBody SetProductQuantityStateRequest quantityState) throws ProductNotFoundException {
     public boolean updateQuantityState(@RequestParam UUID productId, @RequestParam QuantityState quantityState) throws ProductNotFoundException {
         SetProductQuantityStateRequest quantityStateRequest = SetProductQuantityStateRequest.builder().productId(productId).quantityState(quantityState).build();
         log.info("Updating quantityState: {}", quantityState);

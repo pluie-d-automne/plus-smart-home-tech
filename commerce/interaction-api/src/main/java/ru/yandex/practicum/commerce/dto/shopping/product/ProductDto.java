@@ -15,27 +15,27 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
-    UUID productId;
+    private UUID productId;
 
     @NotNull
     @NotEmpty
-    String productName;
+    private String productName;
 
     @NotNull
     @NotEmpty
-    String description;
+    private String description;
 
-    String imageSrc;
-
-    @NotNull
-    QuantityState quantityState;
+    private String imageSrc;
 
     @NotNull
-    ProductState productState;
+    private QuantityState quantityState;
 
-    ProductCategory productCategory;
+    @NotNull
+    private ProductState productState;
+
+    private ProductCategory productCategory;
 
     @NotNull
     @Min(1)
-    Double price;
+    private Double price;
 }

@@ -1,8 +1,5 @@
 package ru.yandex.practicum.commerce;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.commerce.dto.shopping.cart.ChangeProductQuantityRequestDto;
 import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.exception.NoProductsInShoppingCartException;

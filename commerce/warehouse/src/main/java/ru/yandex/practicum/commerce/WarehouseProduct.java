@@ -21,24 +21,24 @@ import java.util.UUID;
 public class WarehouseProduct {
     @Id
     @Column(name = "uuid", nullable = false)
-    UUID productId;
+    private UUID productId;
 
     @Column(name = "fragile", nullable = false)
-    Boolean fragile;
+    private Boolean fragile;
 
     @Column(name = "width", nullable = true)
-    Double width;
+    private Double width;
 
     @Column(name = "height", nullable = true)
-    Double height;
+    private Double height;
 
     @Column(name = "depth", nullable = true)
-    Double depth;
+    private Double depth;
 
     @Column(name = "weight", nullable = true)
-    Double weight;
+    private Double weight;
 
     @Column(name = "quantity", nullable = false)
     @ColumnDefault("0")
-    Long quantity;
+    private Long quantity;
 }

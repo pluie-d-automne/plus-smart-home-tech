@@ -8,5 +8,4 @@ public interface ShoppingCartMapper {
 
     ShoppingCartDto toDto(ShoppingCart cart);
 
-    //ShoppingCart fromDto(ShoppingCartDto cartDto);
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DimensionDto {
-    Double width;
-    Double height;
-    Double depth;
+    private Double width;
+    private Double height;
+    private Double depth;
 }

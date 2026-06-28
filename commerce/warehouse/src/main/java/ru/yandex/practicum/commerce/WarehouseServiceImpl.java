@@ -3,7 +3,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.commerce.dto.warehouse.booking.BookedProductsDto;
-import ru.yandex.practicum.commerce.dto.warehouse.booking.ShoppingCartDto;
+import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.dto.warehouse.product.AddProductToWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.product.NewProductInWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.warehouse.AddressDto;

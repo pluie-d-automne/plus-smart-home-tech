@@ -28,29 +28,29 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false)
-    UUID productId;
+    private UUID productId;
 
     @Column(name = "name", nullable = false)
-    String productName;
+    private String productName;
 
     @Column(name = "description", nullable = false)
-    String description;
+    private String description;
 
     @Column(name = "image_src", nullable = true)
-    String imageSrc;
+    private String imageSrc;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "quantity_state", nullable = false)
-    QuantityState quantityState;
+    private QuantityState quantityState;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "product_state", nullable = false)
-    ProductState productState;
+    private ProductState productState;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = true)
-    ProductCategory productCategory;
+    private ProductCategory productCategory;
 
     @Column(name = "price", nullable = false)
-    Double price;
+    private Double price;
 }

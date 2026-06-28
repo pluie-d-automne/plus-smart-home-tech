@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.commerce.contract.warehouse.WarehouseOperations;
 import ru.yandex.practicum.commerce.dto.warehouse.booking.BookedProductsDto;
-import ru.yandex.practicum.commerce.dto.warehouse.booking.ShoppingCartDto;
+import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.dto.warehouse.product.AddProductToWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.product.NewProductInWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.warehouse.AddressDto;

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SortObject {
     @NotNull
-    String direction; //"ASC" or "DESC"
+    private String direction; //"ASC" or "DESC"
     @NotNull
-    String property;
+    private String property;
 
 }

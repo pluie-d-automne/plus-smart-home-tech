@@ -12,8 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewProductInWarehouseRequest {
-    UUID productId;
-    Boolean fragile;
-    DimensionDto dimension;
-    Double weight;
+    private UUID productId;
+    private Boolean fragile;
+    private DimensionDto dimension;
+    private Double weight;
 }
