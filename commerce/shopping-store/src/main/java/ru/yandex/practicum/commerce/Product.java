@@ -10,15 +10,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductCategory;
 import ru.yandex.practicum.commerce.dto.shopping.product.ProductState;
 import ru.yandex.practicum.commerce.dto.shopping.product.QuantityState;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

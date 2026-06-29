@@ -22,3 +22,17 @@ logging:
         transaction: INFO
       zalando:
         logbook: TRACE
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 50
+      failureRateThreshold: 50
+  instances:
+    warehouse:
+      slidingWindowSize: 10
+      failureRateThreshold: 20
+      waitDurationInOpenState: 60000 # 1 минута в миллисекундах
+      permittedNumberOfCallsInHalfOpenState: 1
+      slidingWindowType: COUNT_BASED
+      minimumNumberOfCalls: 2
+      automaticTransitionFromOpenToHalfOpenEnabled: true
