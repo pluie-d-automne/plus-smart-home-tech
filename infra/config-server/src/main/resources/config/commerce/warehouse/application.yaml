@@ -1,0 +1,38 @@
+#spring.profiles.active: test
+server:
+  port: 0
+spring:
+  jpa:
+    hibernate.ddl-auto: none
+    show-sql: true
+    properties.hibernate.format_sql: true
+  sql:
+    init.mode: always
+  # Connection to Postgres DB
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:8432/warehouse
+    username: dbuser
+    password: 12345
+logging:
+  level:
+    org:
+      springframework:
+        orm.jpa: INFO
+        transaction: INFO
+      zalando:
+        logbook: TRACE
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 50
+      failureRateThreshold: 50
+  instances:
+    warehouse:
+      slidingWindowSize: 10
+      failureRateThreshold: 20
+      waitDurationInOpenState: 60000 # 1 минута в миллисекундах
+      permittedNumberOfCallsInHalfOpenState: 1
+      slidingWindowType: COUNT_BASED
+      minimumNumberOfCalls: 2
+      automaticTransitionFromOpenToHalfOpenEnabled: true

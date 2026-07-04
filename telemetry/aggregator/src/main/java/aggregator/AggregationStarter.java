@@ -11,7 +11,6 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
@@ -19,6 +18,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Класс AggregationStarter, ответственный за запуск агрегации данных.
@@ -30,15 +30,15 @@ public class AggregationStarter {
     private final Consumer consumer;
     private final Producer producer;
     private final SnapshotAggregation agg;
+    private Properties properties;
 
-    @Autowired
-    private Environment env;
 
     @Autowired
     public AggregationStarter(KafkaClient client) {
         this.consumer = client.getConsumer();
         this.producer = client.getProducer();
         this.agg = new SnapshotAggregation();
+        this.properties = client.getProperties();
     }
 
     /**
@@ -51,7 +51,7 @@ public class AggregationStarter {
         Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
 
         try {
-            consumer.subscribe(List.of(env.getProperty("topic.sensors")));
+            consumer.subscribe(List.of(properties.getProperty("topic.sensors")));
             // Цикл обработки событий
             while (true) {
                 ConsumerRecords<Void, SpecificRecordBase> records = consumer.poll(Duration.ofSeconds(5));
@@ -61,7 +61,7 @@ public class AggregationStarter {
                         Optional<SensorsSnapshotAvro> snapshotAvro = agg.updateState(event);
                         if (snapshotAvro.isPresent()) {
                             SensorsSnapshotAvro snapshot = snapshotAvro.get();
-                            ProducerRecord<String, SpecificRecordBase> recordToSend = new ProducerRecord<>(env.getProperty("topic.snapshots"),
+                            ProducerRecord<String, SpecificRecordBase> recordToSend = new ProducerRecord<>(properties.getProperty("topic.snapshots"),
                                     snapshot.getHubId(),
                                     snapshot);
                             log.info("Отправляю новый снапшот для хаба {} в кафку.", event.getId());
