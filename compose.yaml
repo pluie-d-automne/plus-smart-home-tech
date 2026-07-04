@@ -94,6 +94,51 @@ services:
       interval: 5s
       retries: 10
 
+  pgdb-order:
+    container_name: pgdb-order
+    image: postgres:16.1
+    ports:
+      - "9432:5432"
+    environment:
+      - POSTGRES_DB=order
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d order -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+  pgdb-payment:
+    container_name: pgdb-payment
+    image: postgres:16.1
+    ports:
+      - "10432:5432"
+    environment:
+      - POSTGRES_DB=payment
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d payment -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+  pgdb-delivery:
+    container_name: pgdb-delivery
+    image: postgres:16.1
+    ports:
+      - "11432:5432"
+    environment:
+      - POSTGRES_DB=delivery
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d delivery -U dbuser" ]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
 #  analyzer:
 #    container_name: analyzer
 #    build: telemetry/analyzer
