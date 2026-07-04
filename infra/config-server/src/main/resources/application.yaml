@@ -10,8 +10,14 @@ spring:
           searchLocations:
             - classpath:config/telemetry/{application}
             - classpath:config/commerce/{application}
+            - classpath:config/infra/{application}
 server:
   port: 8888
+logging:
+  level:
+    org:
+      springframework:
+        config: INFO
 eureka:
   client:
     registerWithEureka: true
@@ -20,6 +26,6 @@ eureka:
       #defaultZone: http://discovery-server:8761/eureka/
   instance:
     preferIpAddress: true
-    hostname: loaclhost
+    hostname: localhost
     instance-id: "${spring.application.name}:${random.value}"
     leaseRenewalIntervalInSeconds: 10

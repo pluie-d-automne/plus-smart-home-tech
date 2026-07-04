@@ -55,8 +55,22 @@ docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/war
 ## Infra
 
 ### Config Server
+Spring Cloud Config Server
 
+Получить конфиг для сервиса по API:
+```bash
+GET localhost:8888/service-name/default
+```
 
 ### DiscoveryServer
 Eureka Server at http://localhost:8761/
 GET http://localhost:8761/eureka/v2/apps
+
+### Gateway Server
+Spring Cloud GateWay
+
+## Кеширование (список продуктов - на клиенте или на сервисе) spring-cache-tutorial @EnableCaching @Cacheable
+spring-boot-caffeine-cache
+## Spring Security
+spring-boot-security-autoconfiguration
+@EnableWebSecurity (базовая авторизация и аутентификация)
