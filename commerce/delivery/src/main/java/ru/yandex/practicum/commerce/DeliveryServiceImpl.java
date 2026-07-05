@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.commerce.contract.shopping.order.OrderOperations;
 import ru.yandex.practicum.commerce.dto.delivery.DeliveryDto;
 import ru.yandex.practicum.commerce.dto.delivery.DeliveryState;
 import ru.yandex.practicum.commerce.dto.shopping.order.OrderDto;
@@ -22,6 +23,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryMapper deliveryMapper;
     private final DeliveryRepository deliveryRepository;
     private final AddressRepository addressRepository;
+    private final OrderOperations orderOperations;
 
     private static final Double BASE_COST = 5d;
 
@@ -49,7 +51,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         } else {
             log.warn("Could not finalize delivery for order {}: {}", orderId, deliveryUpd);
         }
-        // Также надо изменить статус заказа в сервисе order
+        orderOperations.deliver(orderId);
     }
 
     @Override
@@ -66,8 +68,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         } else {
             log.warn("Could not set delivery as picked for order {}: {}", orderId, deliveryUpd);
         }
-        // Также надо изменить статус заказа в сервисе order
-        // shippedToDelivery в warehouse
+        // Также надо изменить статус заказа в сервисе shippedToDelivery в warehouse
     }
 
     @Override
@@ -84,7 +85,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         } else {
             log.warn("Could not set delivery as failed for order {}: {}", orderId, deliveryUpd);
         }
-        // Также надо изменить статус заказа в сервисе order
+        orderOperations.failDelivery(orderId);
     }
 
     @Override

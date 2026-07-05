@@ -2,6 +2,8 @@ package ru.yandex.practicum.commerce;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.yandex.practicum.commerce.dto.shopping.order.PaymentState;
 
 import java.util.UUID;
 
@@ -36,11 +39,18 @@ public class Payment {
     private UUID shoppingCartId;
 
     @Column(name = "total_payment", nullable = true)
-    private Double totalPayment;
+    private Double totalPayment; // Общая стоимость
 
     @Column(name = "delivery_total", nullable = true)
-    private Double deliveryTotal;
+    private Double deliveryTotal; // Стоимость доставки
 
     @Column(name = "fee_total", nullable = true)
-    private Double feeTotal;
+    private Double feeTotal; // Стоимость налога
+
+    @Column(name = "product_price", nullable = true)
+    private Double productPrice; // Стоимость товаров
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state", nullable = false)
+    private PaymentState paymentState;
 }
