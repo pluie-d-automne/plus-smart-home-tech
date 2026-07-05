@@ -23,35 +23,36 @@ public interface OrderOperations {
     List<OrderDto> getOrdersByUser(@RequestParam String username) throws NotAuthorizedUserException;
 
     @PutMapping
-    OrderDto createNewOrder(@RequestBody CreateNewOrderRequest request) throws NoSpecifiedProductInWarehouseException;
+    OrderDto createNewOrder(@RequestParam String username,
+                            @RequestBody CreateNewOrderRequest request) throws NoSpecifiedProductInWarehouseException;
 
     @PostMapping("/return")
     OrderDto returnProducts(@RequestBody ProductReturnRequest request) throws NoOrderFoundException;
 
-    @PostMapping("/payment")
+    @PostMapping("/payment/{orderId}")
     OrderDto pay(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/payment/failed")
+    @PostMapping("/payment/failed/{orderId}")
     OrderDto failPayment(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/delivery")
+    @PostMapping("/delivery/{orderId}")
     OrderDto deliver(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/delivery/failed")
+    @PostMapping("/delivery/failed/{orderId}")
     OrderDto failDelivery(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/completed")
+    @PostMapping("/completed/{orderId}")
     OrderDto complete(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/calculate/total")
+    @PostMapping("/calculate/total/{orderId}")
     OrderDto calcTotal(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/calculate/delivery")
+    @PostMapping("/calculate/delivery/{orderId}")
     OrderDto calcDelivery(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/assembly")
+    @PostMapping("/assembly/{orderId}")
     OrderDto assemble(@PathVariable UUID orderId) throws NoOrderFoundException;
 
-    @PostMapping("/assembly/failed")
+    @PostMapping("/assembly/failed/{orderId}")
     OrderDto failAssembly(@PathVariable UUID orderId) throws NoOrderFoundException;
 }

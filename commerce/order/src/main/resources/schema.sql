@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS order_content;
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE IF NOT EXISTS orders (
-  uuid UUID NOT NULL DEFAULT uuid_generate_v4 (),
+  uuid UUID NOT NULL DEFAULT uuid_generate_v4(),
   shopping_cart_id UUID NULL,
   payment_id UUID NULL,
   delivery_id UUID NULL,

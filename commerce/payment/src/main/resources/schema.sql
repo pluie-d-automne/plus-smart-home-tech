@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS payments;
 
 CREATE TABLE IF NOT EXISTS payments (
-  uuid UUID NOT NULL DEFAULT uuid_generate_v4 (),
+  uuid UUID NOT NULL DEFAULT uuid_generate_v4(),
   order_id UUID NOT NULL,
   shopping_cart_id UUID NOT NULL,
   total_payment NUMERIC NULL,
@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS payments (
   fee_total NUMERIC NULL,
   product_price NUMERIC NULL,
   state VARCHAR NOT NULL,
-  CONSTRAINT payments PRIMARY KEY (uuid)
+  CONSTRAINT pk_payments PRIMARY KEY (uuid)
  );

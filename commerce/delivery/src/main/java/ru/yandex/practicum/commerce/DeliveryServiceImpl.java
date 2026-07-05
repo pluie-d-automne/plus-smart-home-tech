@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.commerce.contract.shopping.order.OrderOperations;
+import ru.yandex.practicum.commerce.contract.warehouse.WarehouseOperations;
 import ru.yandex.practicum.commerce.dto.delivery.DeliveryDto;
 import ru.yandex.practicum.commerce.dto.delivery.DeliveryState;
 import ru.yandex.practicum.commerce.dto.shopping.order.OrderDto;
 import ru.yandex.practicum.commerce.dto.warehouse.warehouse.AddressDto;
+import ru.yandex.practicum.commerce.dto.warehouse.warehouse.ShippedToDeliveryRequest;
 import ru.yandex.practicum.commerce.exception.NoDeliveryFoundException;
 import ru.yandex.practicum.commerce.exception.NoWarehouseFound;
 
@@ -24,6 +26,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final AddressRepository addressRepository;
     private final OrderOperations orderOperations;
+    private final WarehouseOperations warehouseOperations;
 
     private static final Double BASE_COST = 5d;
 
@@ -68,7 +71,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         } else {
             log.warn("Could not set delivery as picked for order {}: {}", orderId, deliveryUpd);
         }
-        // Также надо изменить статус заказа в сервисе shippedToDelivery в warehouse
+        warehouseOperations.shipToDelivery(ShippedToDeliveryRequest.builder()
+                        .deliveryId(delivery.getDeliveryId())
+                        .orderId(orderId)
+                        .build());
     }
 
     @Override

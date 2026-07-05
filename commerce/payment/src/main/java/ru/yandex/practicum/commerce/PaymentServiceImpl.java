@@ -71,6 +71,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         Payment payment = paymentRepository.save(Payment.builder()
+                        .paymentId(orderDto.getPaymentId())
                         .orderId(orderDto.getOrderId())
                         .shoppingCartId(orderDto.getShoppingCartId())
                         .totalPayment(orderDto.getTotalPrice())
