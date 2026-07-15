@@ -15,9 +15,14 @@ import ru.yandex.practicum.commerce.dto.shopping.cart.ShoppingCartDto;
 import ru.yandex.practicum.commerce.dto.warehouse.product.AddProductToWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.product.NewProductInWarehouseRequest;
 import ru.yandex.practicum.commerce.dto.warehouse.warehouse.AddressDto;
+import ru.yandex.practicum.commerce.dto.warehouse.warehouse.AssemblyProductsForOrderRequest;
+import ru.yandex.practicum.commerce.dto.warehouse.warehouse.ShippedToDeliveryRequest;
 import ru.yandex.practicum.commerce.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.commerce.exception.ProductInShoppingCartLowQuantityInWarehouse;
 import ru.yandex.practicum.commerce.exception.SpecifiedProductAlreadyInWarehouseException;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -34,6 +39,7 @@ public class WarehouseController implements WarehouseOperations {
         warehouseService.addProduct(productRequest);
     }
 
+    @Override
     @PostMapping("/check")
     public BookedProductsDto checkBookingProducts(@RequestBody ShoppingCartDto shoppingCartDto) throws ProductInShoppingCartLowQuantityInWarehouse {
         log.info("Check products for shopping cart: {}", shoppingCartDto);
@@ -42,17 +48,42 @@ public class WarehouseController implements WarehouseOperations {
         return bookedProductsDto;
     }
 
+    @Override
     @PostMapping("/add")
     public void addProductQuantity(@RequestBody AddProductToWarehouseRequest addProductToWarehouseRequest) throws NoSpecifiedProductInWarehouseException {
         log.info("Updating product quantity: {}", addProductToWarehouseRequest);
         warehouseService.addProductQuantity(addProductToWarehouseRequest);
     }
 
+    @Override
     @GetMapping("/address")
     public AddressDto getAddress() {
         log.info("Getting warehouse address.");
         AddressDto addressDto = warehouseService.getAddress();
         log.info("Warehouse address: {}", addressDto);
         return addressDto;
+    }
+
+    @Override
+    @PostMapping("/shipped")
+    public void shipToDelivery(@RequestBody ShippedToDeliveryRequest request) {
+        log.info("Need to ship to delivery: {}", request);
+        warehouseService.shipToDelivery(request);
+    }
+
+    @Override
+    @PostMapping("/return")
+    public void returnProductsToWarehouse(@RequestBody Map<UUID, Long> products) {
+        log.info("Need to return products to warehouse: {}", products);
+        warehouseService.returnProductsToWarehouse(products);
+    }
+
+    @Override
+    @PostMapping("/assembly")
+    public BookedProductsDto assembly(@RequestBody AssemblyProductsForOrderRequest orderRequest) {
+        log.info("Need to assembly order: {}", orderRequest);
+        BookedProductsDto bookedProductsDto = warehouseService.assembly(orderRequest);
+        log.info("Booked products: {}", bookedProductsDto);
+        return bookedProductsDto;
     }
 }

@@ -52,11 +52,48 @@ docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/sho
 docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project21/warehouse-06022025.json swaggerapi/swagger-ui
 ```
 
+### order - заказ
+* Предоставление покупателям информации о размещённых заказах, их текущем статусе
+* Оформление заказов
+
+Спецификации OpenApi для сервиса order в SwaggerUI:
+```bash
+docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project22/order.json swaggerapi/swagger-ui
+```
+
+### payment - адаптер платёжного шлюза для покупателя
+Спецификации OpenApi для сервиса payment в SwaggerUI:
+```bash
+docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project22/payment12022025.json swaggerapi/swagger-ui
+```
+
+### delivery - адаптер сервиса доставки
+Спецификации OpenApi для сервиса payment в SwaggerUI:
+```bash
+docker run -p 9090:8080 -e API_URL=https://code.s3.yandex.net/Java/project22/delivery.json swaggerapi/swagger-ui
+```
+
 ## Infra
 
 ### Config Server
+Spring Cloud Config Server
 
+Получить конфиг для сервиса по API:
+```bash
+GET localhost:8888/service-name/default
+```
 
 ### DiscoveryServer
 Eureka Server at http://localhost:8761/
 GET http://localhost:8761/eureka/v2/apps
+
+### Gateway Server
+Spring Cloud GateWay
+
+## Что ещё попробовать
+### Кеширование
+(список продуктов - на клиенте или на сервисе) spring-cache-tutorial @EnableCaching @Cacheable
+spring-boot-caffeine-cache
+### Spring Security
+spring-boot-security-autoconfiguration
+@EnableWebSecurity (базовая авторизация и аутентификация)
